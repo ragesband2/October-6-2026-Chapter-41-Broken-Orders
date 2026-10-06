@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Chapter 41: Broken Orders</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0f14;color:#d0d5e0;font-family:Arial Black,Impact,sans-serif;overflow:hidden}
+#storyBox{position:absolute;inset:0;z-index:999;background:#0d0f14;overflow-y:auto;padding:20px;pointer-events:all}
+#gameUI{display:flex;height:100vh}
+#left{width:340px;background:#131a22;border-right:3px solid #ff3d00;padding:12px;overflow-y:auto}
+#center{flex:1;position:relative;background:#0a0e13;display:flex;align-items:center;justify-content:center}
+canvas{border:3px solid #ff3d00;background:#0e1a0f}
+#right{width:350px;background:#131a22;border-left:3px solid #ffca28;padding:12px;overflow-y:auto}
+.bar{width:100%;height:18px;background:#000;border:1px solid #ff3d00;margin:4px 0}
+.fill{height:100%;transition:width 0.3s}
+.btn{background:#1e2a1e;color:#fff;border:1px solid #ff3d00;padding:7px 9px;margin:3px;cursor:pointer;width:100%;font-weight:bold;font-size:11px}
+.btn:hover{background:#3a4a2a;color:yellow}
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+
+<div id="storyBox">
+<h1 style="text-align:center;color:#ff3d00">Chapter 41: Bedtime Stories<br>April 2 2020<br>Broken Orders<br>From Heresy Governments And "The Rages Band"</h1>
+<div style="max-width:940px;margin:auto;background:#141e14;padding:20px;border:2px solid #ff3d00;white-space:pre-wrap;line-height:1.8;font-family:Georgia,serif">
+Once upon a time people into the business that time started a war. It's because this is the story of the misunderstanding politics. In that case all of the governments acclaim the war imposed because there is no 1 president who leads our country. The country name "Broken Orders". Because an order needs to have a chance of having a president. But in the nomination people or the employees don't vote to be senators or else to be a president that's why because of the misunderstanding. The governments starts a war. After 5 decades only few get survived because of the heroic doctors. With the hospital company namely "Successful Orders". Those team of doctors chose to be a plural presidents. In that case whenever no presidents having in the broken orders. It's should be replaced by "Successful Orders". As the story ends 10 years ago the criminals, strangers and even the drug lords starts again conquering our world. Because of politics without president no army can protect our social-class. And when the social-class is down no more innocent people keeping safe. What the thing do by the criminals, strangers and the drug lords is kill them all. To become rich in an economy. When in fact doctors said as they saw. Oh no! it was already too late this 10 years ago already happened. We must take our plural presidents not other than one. We must help each other in this entire organization. No one will left this powerful army. We need to control the area of politics surround. As the time already came. Doctors have no fear on politics. But chose to become a leader or become the most powerful presidents in the world. Less people now know the news all about because they see the doctors turning to become the legend president. Or likewise it needs a poor people to become a troops in a war. Suddenly 1 year ago passed. The presidents now recently donate some poor people turning to the surviving soldiers. Because they want to defeat the politics. And so the day began the war is settled. The presidents army said, Our next plan to defeat the politics one must attack to the criminals, strangers and even the drug lords. If they fell asleep we need to kill it. To save our world from the bad forms of misunderstanding criticisms judge by bad people only because of the greed and the money. The soldiers understand what the president do then it already save the world. Because that is the plan of the presidents. Then in the next day. The war is now ended and it turns peaceful. The rebellious doctors whom called Not the "Broken Orders" now but it already called the "Successful Orders" return peace in the country. The lesson is they organize and help each other to save the world. Moral Lesson: You need a leader that equates to humility of a living person. Without a leader or a president our world can't understand better. Because we don't know what happens now in our world. If there is good and bad aspects traced the human race. Before it's too late we need a leader because being a leader is a hero of a beneficial fight for the crisis.
+</div>
+<center style="margin:20px">
+<p><b>NEW GENRE: PLURAL PRESIDENTS STRATEGY - Doctors Become Presidents - Build Army From Poor People - Defeat Criminals Drug Lords</b></p>
+<p>Controls: WASD Command President | F Toggle Tactical View | E Recruit Poor To Soldiers | Q Inventory | K Skill Tree | Mouse Click Attack Criminals When They Sleep | R Call Successful Orders Hospital</p>
+<button onclick="startGame()" style="font-size:26px;background:#ff3d00;color:#fff;padding:18px 52px;border-radius:8px">ENTER BROKEN ORDERS COUNTRY</button>
+</center>
+</div>
+
+<div id="gameUI">
+<div id="left">
+<b>PLAYER CHARACTER - Plural Presidents</b><br>
+Select: <select id="charPick" onchange="changePresident()" class="btn"><option>Doctor President - Heroic - Hospital Company Successful Orders</option><option>Poor People Soldier - Donated To Surviving Troops</option><option>Legend President - Most Powerful Presidents In World</option></select>
+Level <span id="lv">1</span> SP <span id="sp">2</span>
+<div>Country Health - Social Class</div><div class="bar"><div id="hp" class="fill" style="width:100%;background:linear-gradient(90deg,#c62828,#ff7043)"></div></div>
+<div>Leadership - Plural Presidents Unity</div><div class="bar"><div id="lead" class="fill" style="width:75%;background:linear-gradient(90deg,#1565c0,#64b5f6)"></div></div>
+<div>Army Power - Poor To Soldiers</div><div class="bar"><div id="army" class="fill" style="width:60%;background:linear-gradient(90deg,#2e7d32,#81c784)"></div></div>
+<div>Successful Orders XP</div><div class="bar"><div id="xp" class="fill" style="width:0%;background:linear-gradient(90deg,#ff8f00,#ffd54f)"></div></div>
+<div>War Status: <span id="war">Broken Orders - No President - 5 Decades War</span><br>Social-Class: <span id="social">Down - Innocent Not Safe</span><br>Year: <span id="year">10 Years Ago Criminals Conquer</span></div>
+<h3>INVENTORY & EQUIPMENT</h3>
+<div id="inv" style="font-size:11px">
+- Hospital Company Successful Orders [Base]<br>
+- Plural Presidents Badge - No 1 President But Many [Equipped] Leadership +10<br>
+- Poor People Donation - Turn To Soldiers [Resource] Army +15<br>
+- Doctor Tools - Heroic Doctors Survived 5 Decades [Weapon] Heal +20<br>
+- Politics Map - Misunderstanding Politics Area Control [Map Item]<br>
+- Army Radio - Powerful Army No One Left [Command Item]<br>
+- Economy Cash - Criminals Want To Be Rich [Enemy Loot]<br>
+</div>
+<button class="btn" onclick="recruit()">E - Recruit Poor People To Troops - Donate To Surviving Soldiers</button>
+<button class="btn" onclick="callHospital()">R - Call Successful Orders Hospital - Doctors Have No Fear</button>
+<button class="btn" onclick="organize()">Organize Help Each Other - Lesson: Help Each Other Save World</button>
+</div>
+
+<div id="center"><canvas id="mini" width="140" height="140" style="position:absolute;bottom:10px;right:10px;border:2px solid #ff3d00;z-index:5;background:#000"></canvas><div id="cross" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff3d00;pointer-events:none">TACTICAL CROSSHAIR - PRESIDENT COMMAND</div></div>
+
+<div id="right">
+<b id="mainQ">MAIN QUEST: Broken Orders Country - No 1 President</b><div id="mainD" style="font-size:12px">Country Broken Orders because no president leads. Governments acclaim war imposed. After 5 decades few survived because heroic doctors Successful Orders. 10 years ago criminals, strangers, drug lords conquer because no army protect social-class. Doctors say: We must take plural presidents! 1 year ago presidents donate poor people turning to surviving soldiers to defeat politics!</div><hr>
+<div id="sideQ" style="font-size:11px"></div>
+<h3>ENEMIES & BOSSES</h3>
+<div id="elist" style="font-size:11px"></div>
+<h3>PROGRESSION & SKILL TREE - Legend President</h3>
+<button class="btn" onclick="upSkill('plural')">PLURAL PRESIDENTS - No 1 President But Many - Replace Broken Orders Leadership+12</button>
+<button class="btn" onclick="upSkill('doctor')">HEROIC DOCTORS - Survived 5 Decades Hospital - Successful Orders Army+10 Heal+15</button>
+<button class="btn" onclick="upSkill('donate')">DONATE POOR TO SOLDIERS - Poor people to troops - Army+15 Economy+10</button>
+<button class="btn" onclick="upSkill('control')">CONTROL POLITICS AREA - Control area of politics surround - Tactical+12</button>
+<button class="btn" onclick="upSkill('sleep')">ATTACK WHEN SLEEP - If criminals fell asleep kill it - Stealth+10 ATK+8</button>
+<button class="btn" onclick="upSkill('peace')">RETURN PEACE - War ended peaceful - Successful Orders - Social-Class Up XP x2</button>
+<div id="slog" style="font-size:11px;color:#ffcc80"></div>
+</div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+let scene,camera,renderer,player,keys={},fp=false,active=false;
+let STAT={hp:100,max:100,lead:75,army:60,xp:0,lv:1,sp:2,year:0,warPhase:0};
+let npcs=[],enemies=[],buildings=[];
+window.startGame=()=>{document.getElementById('storyBox').style.display='none';init();}
+window.changePresident=()=>{
+ let v=document.getElementById('charPick').value;
+ if(v.includes('Doctor')){STAT.lead=75; player.children[0].material.color.set(0xffffff);}
+ if(v.includes('Poor')){STAT.army=70; player.children[0].material.color.set(0x8d6e63);}
+ if(v.includes('Legend')){STAT.lead=90; STAT.army=80; player.children[0].material.color.set(0xffca28);}
+ updateHUD();
+}
+function init(){
+ active=true;
+ scene=new THREE.Scene(); scene.background=new THREE.Color(0x080a0f); scene.fog=new THREE.Fog(0x080a0f,18,75);
+ camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.1,1000); renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setSize(innerWidth,innerHeight); document.querySelector('#center').appendChild(renderer.domElement);
+ scene.add(new THREE.AmbientLight(0xffffff,0.85)); let dl=new THREE.DirectionalLight(0xffffcc,0.8); dl.position.set(15,25,12); scene.add(dl);
+ let ground=new THREE.Mesh(new THREE.PlaneGeometry(160,160), new THREE.MeshStandardMaterial({color:0x1a2a1a})); ground.rotation.x=-Math.PI/2; scene.add(ground);
+ // Broken Orders country buildings - politics area
+ for(let i=0;i<14;i++){
+   let h=3+Math.random()*7; let b=new THREE.Mesh(new THREE.BoxGeometry(3, h, 3), new THREE.MeshStandardMaterial({color:0x37474f}));
+   let x=(Math.random()-0.5)*60, z=(Math.random()-0.5)*60; if(Math.abs(x)<8&&Math.abs(z)<8)continue;
+   b.position.set(x,h/2,z); scene.add(b); buildings.push(b);
+   // Broken windows
+   if(Math.random()<0.6){let win=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.6,0.2), new THREE.MeshStandardMaterial({color:0xff3d00,emissive:0xff3d00})); win.position.set(x+1.6,h/2+1,z); scene.add(win);}
+ }
+ // Successful Orders Hospital base - plural presidents HQ
+ let hospital=new THREE.Mesh(new THREE.BoxGeometry(12,6,12), new THREE.MeshStandardMaterial({color:0xffffff})); hospital.position.set(0,3,0); scene.add(hospital);
+ let cross1=new THREE.Mesh(new THREE.BoxGeometry(6,1.2,1.2), new THREE.MeshStandardMaterial({color:0xff3d00})); cross1.position.set(0,5,0); scene.add(cross1);
+ let cross2=new THREE.Mesh(new THREE.BoxGeometry(1.2,6,1.2), new THREE.MeshStandardMaterial({color:0xff3d00})); cross2.position.set(0,5,0); scene.add(cross2);
+ // President player - doctor president
+ let pg=new THREE.Group(); let body=new THREE.Mesh(new THREE.CapsuleGeometry(0.45,1.2,4,8), new THREE.MeshStandardMaterial({color:0xffffff})); body.position.y=1; pg.add(body);
+ let coat=new THREE.Mesh(new THREE.BoxGeometry(1,1.4,0.6), new THREE.MeshStandardMaterial({color:0xe0e0e0})); coat.position.y=0.9; pg.add(coat);
+ pg.position.set(0,1,12); scene.add(pg); player=pg;
+ // NPCs - Poor people to soldiers
+ spawnNPC(-10,0,8,"Poor People - To Become Troops","We are poor people donated to surviving soldiers! President donate us! We want to defeat politics!","poor");
+ spawnNPC(10,0,8,"Heroic Doctors - Successful Orders","We survived 5 decades war! We chose to be plural presidents! No 1 president but many! We have no fear on politics!","doctor");
+ spawnNPC(-12,0,-4,"Innocent Social-Class - Down","No army protect social-class! No more innocent keeping safe! Criminals kill all to become rich! Need leader!","social");
+ spawnNPC(12,0,-4,"Legend President News","Less people know news! Doctors turning to legend president! Most powerful presidents in world!","news");
+ // Enemies - Criminals, strangers, drug lords - 10 years ago conquer
+ spawnEnemy(20,0,20,"Criminal - Kill All To Be Rich Economy",false,70);
+ spawnEnemy(-22,0,18,"Stranger - Conquer World",false,65);
+ spawnEnemy(18,0,-20,"Drug Lord - Greed And Money - Bad People",true,130);
+ spawnEnemy(-18,0,-22,"Misunderstanding Politics - No President War",false,75);
+ spawnEnemy(25,0,0,"Social-Class Down Boss - Kills Innocent",true,150);
+ spawnEnemy(0,0,30,"Criminal Sleeping - Attack When Sleep",false,55);
+ spawnEnemy(-25,0,-10,"Greed Criticism - Judge By Bad People",false,60);
+ addEventListener('keydown',e=>{
+   keys[e.key.toLowerCase()]=true; let k=e.key.toLowerCase();
+   if(k=='f')fp=!fp;
+   if(k=='e')recruit(); if(k=='r')callHospital(); if(k=='q'){let el=document.getElementById('left'); el.style.display=el.style.display=='none'?'block':'none';}
+   if(k=='k'){let el=document.getElementById('slog'); el.scrollIntoView();}
+ });
+ addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+ addEventListener('mousedown',()=>{if(active)attack();});
+ addEventListener('mousemove',e=>{if(active&&document.pointerLockElement)player.rotation.y-=e.movementX*0.0025;});
+ renderer.domElement.addEventListener('click',()=>renderer.domElement.requestPointerLock());
+ animate(); updateQuests(); updateHUD();
+}
+function spawnNPC(x,y,z,name,line,type){let g=new THREE.Group(); let col=type=='poor'?0x8d6e63:type=='doctor'?0xffffff:type=='social'?0x81c784:0xffca28; let m=new THREE.Mesh(new THREE.CapsuleGeometry(0.38,1,4,8), new THREE.MeshStandardMaterial({color:col})); m.position.y=0.8; g.add(m); g.position.set(x,0,z); g.userData={name,line,type}; scene.add(g); npcs.push(g);}
+function spawnEnemy(x,y,z,name,boss,hp){let g=new THREE.Group(); let col=boss?0xff3d00:0x212121; let m=new THREE.Mesh(new THREE.BoxGeometry(boss?1.3:0.9,boss?1.9:1.2,0.9), new THREE.MeshStandardMaterial({color:col})); m.position.y=boss?0.95:0.6; g.add(m); g.position.set(x,0,z); g.userData={hp,max:hp,boss,name,sleeping:name.includes('Sleeping')}; scene.add(g); enemies.push(g);}
+function attack(){
+ enemies.forEach(en=>{
+   if(en.position.distanceTo(player.position)<4.5){
+     let dmg=10+STAT.lead*0.15+STAT.army*0.12; if(en.userData.sleeping){dmg*=2.2; document.getElementById('mainD').innerText="Attack criminals when fell asleep! Plan of presidents! Kill to save world from bad forms!";}
+     en.userData.hp-=dmg; en.children[0].material.color.set(0xffff00); setTimeout(()=>en.children[0].material.color.set(en.userData.boss?0xff3d00:0x212121),150);
+     if(en.userData.hp<=0){scene.remove(en); enemies=enemies.filter(e=>e!=en); STAT.xp+=en.userData.boss?110:40; STAT.army=Math.min(100,STAT.army+3); STAT.year++; if(enemies.length==0)winGame(); updateQuests();}
+   }
+ });
+}
+window.recruit=()=>{
+ STAT.army=Math.min(100,STAT.army+14); STAT.lead=Math.min(100,STAT.lead+6); STAT.xp+=22;
+ document.getElementById('mainD').innerText="Presidents donate poor people turning to surviving soldiers! Army: Our next plan attack criminals strangers drug lords! Soldiers understand what president do then save world!";
+ document.getElementById('inv').innerHTML+="<br>[RECRUITED Poor->Soldiers] Army+14 Leadership+6";
+ updateHUD(); updateQuests();
+}
+window.callHospital=()=>{
+ STAT.hp=Math.min(STAT.max,STAT.hp+25); STAT.lead=Math.min(100,STAT.lead+8);
+ document.getElementById('mainD').innerText="Successful Orders Hospital! Team of doctors chose to be plural presidents! Doctors have no fear on politics! Become most powerful presidents! No one left powerful army! Control area of politics surround!";
+ document.getElementById('inv').innerHTML+="<br>[CALLED Hospital] HP+25 Leadership+8";
+ updateHUD();
+}
+window.organize=()=>{
+ STAT.lead=Math.min(100,STAT.lead+10); STAT.army=Math.min(100,STAT.army+6); STAT.xp+=35;
+ document.getElementById('mainD').innerText="Lesson: Organize and help each other to save world! Need leader that equates to humility! Without leader world can't understand better! Being leader is hero of beneficial fight for crisis!";
+ document.getElementById('inv').innerHTML+="<br>[ORGANIZED] Help Each Other Leadership+10 Army+6";
+ updateHUD(); updateQuests();
+}
+window.upSkill=(sk)=>{
+ if(STAT.sp<=0)return; STAT.sp--; document.getElementById('sp').innerText=STAT.sp; let log=document.getElementById('slog');
+ if(sk=='plural'){STAT.lead=Math.min(100,STAT.lead+12); log.innerHTML+="PLURAL PRESIDENTS Leadership+12 Replace Broken Orders<br>";}
+ if(sk=='doctor'){STAT.army=Math.min(100,STAT.army+10); STAT.hp=Math.min(STAT.max,STAT.hp+15); log.innerHTML+="HEROIC DOCTORS Army+10 Heal+15 Survived 5 Decades<br>";}
+ if(sk=='donate'){STAT.army=Math.min(100,STAT.army+15); log.innerHTML+="DONATE POOR TO SOLDIERS Army+15 Economy+10<br>";}
+ if(sk=='control'){STAT.lead=Math.min(100,STAT.lead+8); STAT.army=Math.min(100,STAT.army+4); log.innerHTML+="CONTROL POLITICS AREA Tactical+12 Area Surround<br>";}
+ if(sk=='sleep'){log.innerHTML+="ATTACK WHEN SLEEP Stealth+10 ATK+8 If fell asleep kill it<br>";}
+ if(sk=='peace'){STAT.xp+=90; log.innerHTML+="RETURN PEACE XP x2 War ended peaceful Successful Orders<br>";}
+ updateHUD();
+}
+function updateQuests(){
+ let side=document.getElementById('sideQ');
+ side.innerHTML=`- Country: Broken Orders - No 1 President - War imposed governments acclaim<br>- Phase: ${STAT.warPhase==0?'5 Decades War - Few survived heroic doctors':STAT.warPhase==1?'10 Years Ago Criminals Conquer - No army protect social-class':'1 Year Ago Presidents Donate Poor To Soldiers - War Settled'}<br>- Enemies: Criminals, strangers, drug lords kill all to be rich economy (${enemies.length} left)<br>- Strategy: Recruit poor to troops E, call hospital R, attack when criminals sleep<br>- Goal: Control area politics surround, organize help each other<br>- Moral: Need leader humility, leader is hero beneficial fight crisis`;
+ document.getElementById('war').innerText=STAT.warPhase==0?"Broken Orders - No President":"Successful Orders - Plural Presidents";
+ document.getElementById('social').innerText=STAT.army>70?"Up - Innocent Safe - Peace":"Down - Need Army";
+ document.getElementById('year').innerText=STAT.year+" years after donation - War ending";
+ if(STAT.xp>=100){STAT.lv++; STAT.xp=0; STAT.sp++; STAT.max+=15; STAT.hp=STAT.max; document.getElementById('lv').innerText=STAT.lv; document.getElementById('sp').innerText=STAT.sp; document.getElementById('slog').innerHTML+=`LEVEL UP Level ${STAT.lv} - Legend President<br>`;}
+ updateHUD();
+}
+function updateHUD(){
+ document.getElementById('hp').style.width=STAT.hp/STAT.max*100+"%";
+ document.getElementById('lead').style.width=STAT.lead+"%";
+ document.getElementById('army').style.width=STAT.army+"%";
+ document.getElementById('xp').style.width=STAT.xp+"%";
+}
+function winGame(){
+ document.getElementById('mainQ').innerText="SUCCESSFUL ORDERS - PEACE RETURNED!";
+ document.getElementById('mainD').innerHTML="War is now ended and turns peaceful! Rebellious doctors not Broken Orders but Successful Orders return peace! Soldiers understand plan of presidents! Save world from bad forms misunderstanding criticisms greed money!<br><b>Moral: Need leader that equates to humility! Without leader world can't understand better! Leader is hero beneficial fight for crisis! Organize help each other!</b>";
+ setTimeout(()=>alert("YOU WIN Chapter 41 Broken Orders!\n\nPlural presidents doctors win!\nPoor people became surviving soldiers!\nCriminals strangers drug lords defeated when sleep!\nWar ended peaceful!\n\nMoral: Need leader humility! Organize help each other save world!"),1000);
+}
+function animate(){
+ if(!active)return; requestAnimationFrame(animate);
+ let spd=0.11+STAT.army*0.001;
+ if(keys['w'])player.translateZ(-spd); if(keys['s'])player.translateZ(spd*0.6); if(keys['a'])player.translateX(-spd*0.7); if(keys['d'])player.translateX(spd*0.7);
+ if(keys['shift'])spd*=1.6;
+ enemies.forEach(en=>{
+   if(en.position.distanceTo(player.position)<18){
+     if(en.userData.name.includes('Sleeping')&&Math.random()<0.02){en.userData.sleeping=true; en.children[0].material.color.set(0x607d8b);} else if(!en.userData.sleeping){en.lookAt(player.position); let dir=new THREE.Vector3().subVectors(player.position,en.position).normalize().multiplyScalar(en.userData.boss?0.026:0.018); en.position.add(dir); if(en.position.distanceTo(player.position)<1.5){STAT.hp-=0.32;}}
+   }
+ });
+ if(fp){camera.position.copy(player.position).add(new THREE.Vector3(0,0.9,0.2));} else {let off=new THREE.Vector3(0,6,11).applyQuaternion(player.quaternion); camera.position.copy(player.position).add(off); camera.lookAt(player.position.clone().add(new THREE.Vector3(0,1,0)));}
+ let ctx=document.getElementById('mini').getContext('2d'); ctx.clearRect(0,0,140,140); ctx.fillStyle="#000"; ctx.fillRect(0,0,140,140);
+ ctx.fillStyle="#ffffff"; ctx.fillRect(68,68,6,6);
+ ctx.fillStyle="#ff3d00"; ctx.fillRect(70+player.position.x*0.8,70+player.position.z*0.8,4,4);
+ enemies.forEach(en=>{ctx.fillStyle=en.userData.boss?"#ff3d00":"#212121"; ctx.fillRect(70+en.position.x*0.8,70+en.position.z*0.8,3,3);});
+ npcs.forEach(n=>{ctx.fillStyle="#81c784"; ctx.fillRect(70+n.position.x*0.8,70+n.position.z*0.8,2,2);});
+ if(STAT.hp<=0){alert("Social-class down! Innocent not safe! Need plural presidents leader! Organize help each other!"); location.reload();}
+ renderer.render(scene,camera);
+}
+</script>
+</body>
+</html>
